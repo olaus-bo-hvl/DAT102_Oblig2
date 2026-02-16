@@ -1,18 +1,17 @@
 package Stabel;
-import Stabel.StabelADT;
 
 public class ParantesSjekk implements StabelADT<String> {
 
-    String start = null;
-    String neste = null;
+    Node<String> node = new Node("{ [ ( ) ] }");
+
 
     @Override
     public void push(String newEntry) {
         if (isEmpty()) {
-            start = newEntry;
+            node.data = newEntry;
         } else {
-            neste = start;
-            start = newEntry;
+            node.neste.data = node.data;
+            node.data = newEntry;
         }
     }
 
@@ -22,8 +21,8 @@ public class ParantesSjekk implements StabelADT<String> {
         if (isEmpty()) {
             return null;
         } else {
-            temp = start;
-            start = neste;
+            temp = node.data;
+            node.data = node.neste.data;
             return temp;
         }
     }
@@ -31,14 +30,14 @@ public class ParantesSjekk implements StabelADT<String> {
     @Override
     public String peek() {
         if (!isEmpty()) {
-            return start;
+            return node.data;
         }
         return null;
     }
 
     @Override
     public boolean isEmpty() {
-        if (start == null) {
+        if (node.data == null) {
             return true;
         }
         return false;
@@ -46,8 +45,8 @@ public class ParantesSjekk implements StabelADT<String> {
 
     @Override
     public void clear() {
-        start = null;
-        neste = null;
+        node.neste.data = null;
+        node.data = null;
     }
 
     public char[] stringToChar(String s) {
