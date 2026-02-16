@@ -20,15 +20,5 @@ public class Node<T> {
         }
     }
 
-//	@Override
-//	public String toString() {
-//		if (neste == null) {
-//			return "[data-->[" + data + "], neste = null]";
-//		} else {
-//			//NB! Rekursivt kall til toString() her!
-//			return "[data-->[" + data + "], neste-->" + neste + "]";
-//		}
-//	}
-
 }
 

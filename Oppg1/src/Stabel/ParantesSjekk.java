@@ -2,29 +2,29 @@ package Stabel;
 
 public class ParantesSjekk implements StabelADT<String> {
 
-    Node<String> node = new Node("{ [ ( ) ] }");
+    Node<String> node;
 
 
     @Override
     public void push(String newEntry) {
-        if (isEmpty()) {
-            node.data = newEntry;
-        } else {
-            node.neste.data = node.data;
-            node.data = newEntry;
-        }
+        Node<String> temp = node;
+        node = new Node<>(newEntry);
+        node.neste = temp;
     }
 
     @Override
     public String pop() {
-        String temp;
+        Node<String> temp;
         if (isEmpty()) {
             return null;
+        } else if (node.neste == null) {
+            temp = node;
+            node = null;
         } else {
-            temp = node.data;
-            node.data = node.neste.data;
-            return temp;
+            temp = node;
+            node = node.neste;
         }
+        return temp.data;
     }
 
     @Override
@@ -37,16 +37,15 @@ public class ParantesSjekk implements StabelADT<String> {
 
     @Override
     public boolean isEmpty() {
-        if (node.data == null) {
-            return true;
-        }
-        return false;
+        return node == null;
     }
 
     @Override
     public void clear() {
-        node.neste.data = null;
-        node.data = null;
+        if (isEmpty()) {
+            return;
+        }
+        node = null;
     }
 
     public char[] stringToChar(String s) {
@@ -54,17 +53,11 @@ public class ParantesSjekk implements StabelADT<String> {
     }
 
     public boolean erStartParentes(char c) {
-        if (c == '(' || c == '[' || c == '{') {
-            return true;
-        }
-        return false;
+        return c == '(' || c == '[' || c == '{';
     }
 
     public boolean erSluttParentes(char c) {
-        if (c == ')' || c == ']' || c == '}') {
-            return true;
-        }
-        return false;
+        return c == ')' || c == ']' || c == '}';
     }
 
     public boolean erParentesPar(char start, char slutt) {
@@ -86,20 +79,20 @@ public class ParantesSjekk implements StabelADT<String> {
         for (char c : t) {
             if (erStartParentes(c)) {
                 temp.push(String.valueOf(c));
-            }
-            if (erSluttParentes(c)) {
-                if (temp.peek() != null && erParentesPar(temp.peek().charAt(0), c)) {
-                    //Tar ut startparentesen hvis den matcher med sluttparentesen
-                    temp.pop();
+            } else if (erSluttParentes(c)) {
+                if (!temp.isEmpty()){
+                    if (temp.peek() != null && erParentesPar(temp.peek().charAt(0), c)) {
+                        //Tar ut startparentesen hvis den matcher med sluttparentesen
+                        temp.pop();
+                    } else {
+                        //returnerer false hvis det ikke går opp
+                        return false;
+                    }
                 } else {
-                    //returnerer false hvis det ikke går opp
                     return false;
                 }
             }
         }
-        if (temp.isEmpty()) {
-            return true;
-        }
-        return false;
+        return temp.isEmpty();
     }
 }
