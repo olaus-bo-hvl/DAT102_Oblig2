@@ -1,0 +1,149 @@
+import java.util.*;
+import java.lang.*;
+import java.time.Duration;
+import java.time.Instant;
+
+public class standardSort {
+    public static void standardSort(Integer[] a) {
+        for (int i = 1; i < a.length; i++) {
+            Integer temp = a[i];
+            int j = i;
+            while (j > 0 && temp.compareTo(a[j - 1]) < 0) {
+                a[j] = a[j - 1];
+                j--;
+            }
+            a[j] = temp;
+        }
+    }
+    //a
+    public static void sortSimple(Integer[] a) {
+        if (a.length <= 1) return;
+
+        int floor = 0;
+        for (int i = 1; i < a.length; i++) {
+            if (a[i].compareTo(a[floor]) < 0) {
+                floor = i;
+            }
+        }
+        Integer temp = a[0];
+        a[0] = a[floor];
+        a[floor] = temp;
+
+        for (int i = 1; i < a.length; i++) {
+            Integer value = a[i];
+            int j = i;
+            while (value.compareTo(a[j - 1]) < 0) {
+                a[j] = a[j - 1];
+                j--;
+            }
+            a[j] = value;
+        }
+    }
+    //b
+    public static void sortDouble(Integer[] a) {
+        for (int i = 1; i < a.length; i += 2) {
+            if (i + 1 >= a.length) {
+                Integer temp = a[i];
+                int j = i;
+                while (j > 0 && temp.compareTo(a[j - 1]) < 0) {
+                    a[j] = a[j - 1];
+                    j--;
+                }
+                a[j] = temp;
+                return;
+            }
+            Integer minste = a[i];
+            Integer storste = a[i + 1];
+            if (minste.compareTo(storste) > 0) {
+                Integer temp2 = minste;
+                minste = storste;
+                storste = temp2;
+            }
+            int j = i + 1;
+            while (j > 0 && storste.compareTo(a[j - 1]) < 0) {
+                a[j] = a[j - 1];
+                j--;
+            }
+            a[j] = storste;
+
+            int k = j;
+            while (k > 0 && minste.compareTo(a[k - 1]) < 0) {
+                a[k] = a[k - 1];
+                k--;
+            }
+            a[k] = minste;
+        }
+    }
+    //c
+    public static void sortCombo(Integer[] a) {
+        if (a.length <= 1) return;
+
+        int minste = 0;
+        for (int i = 1; i < a.length; i++) {
+            if (a[i].compareTo(a[minste]) < 0) {
+                minste = i;
+            }
+        }
+        Integer temp = a[0];
+        a[0] = a[minste];
+        a[minste] = temp;
+
+        for (int i = 1; i < a.length; i += 2) {
+            if (i + 1 >= a.length) {
+                Integer rest = a[i];
+                int j = i;
+                while (rest.compareTo(a[j - 1]) < 0) {
+                    a[j] = a[j - 1];
+                    j--;
+                }
+                a[j] = rest;
+                return;
+            }
+            Integer minste2 = a[i];
+            Integer storste2 = a[i + 1];
+            if (minste2.compareTo(storste2) > 0) {
+                Integer temp2 = minste2;
+                minste2 = storste2;
+                storste2 = temp2;
+            }
+            int j = i + 1;
+            while (storste2.compareTo(a[j - 1]) < 0) {
+                a[j] = a[j - 1];
+                j--;
+            }
+            a[j] = storste2;
+
+            int k = j;
+            while (minste2.compareTo(a[k - 1]) < 0) {
+                a[k] = a[k - 1];
+                k--;
+            }
+            a[k] = minste2;
+        }
+    }
+    //test
+    public static void testSorting(String navn, Integer[] arr, Sorter sorter) {
+        long start = System.nanoTime();
+        sorter.sort(arr);
+        long slutt = (System.nanoTime() - start) / 1000000;
+        System.out.println(navn + " tok " + slutt + " ms");
+    }
+    public static void main(String[] args) {
+        int n = 114600;
+        Integer[] arra = new Integer[n];
+        Random rand = new Random(42);
+
+        for (int i = 0; i < n; i++) {
+            arra[i] = rand.nextInt(1000000000);
+        }
+        /* sorterer via metode referanse (::), clone() for å lage kopi av array arra før
+           arra blir sortert slik at hver metode får samme usorterte array */
+        testSorting("standard", arra.clone(), standardSort::standardSort);
+        testSorting("simple", arra.clone(), standardSort::sortSimple);
+        testSorting("double", arra.clone(), standardSort::sortDouble);
+        testSorting("combo", arra.clone(), standardSort::sortCombo);
+    }
+    interface Sorter {
+        void sort(Integer[] a);
+    }
+}
