@@ -15,7 +15,13 @@ public class standardSort {
             a[j] = temp;
         }
     }
-    //a
+/*
+a)
+array på size ~115000 tar meg ca 5 sek å gjennomføre med denne metoden.
+etter å ha sammenlignet denne sorteringen med b & c er det tydelig hvor
+ineffektiv denne er når man behandler større mengder data.
+ca. 1000 ganger lengre enn sistnevnte.
+*/
     public static void sortSimple(Integer[] a) {
         if (a.length <= 1) return;
 
@@ -39,7 +45,7 @@ public class standardSort {
             a[j] = value;
         }
     }
-    //b
+//b
     public static void sortDouble(Integer[] a) {
         for (int i = 1; i < a.length; i += 2) {
             if (i + 1 >= a.length) {
@@ -74,7 +80,7 @@ public class standardSort {
             a[k] = minste;
         }
     }
-    //c
+//c
     public static void sortCombo(Integer[] a) {
         if (a.length <= 1) return;
 
@@ -121,7 +127,7 @@ public class standardSort {
             a[k] = minste2;
         }
     }
-    //test
+//test
     public static void testSorting(String navn, Integer[] arr, Sorter sorter) {
         long start = System.nanoTime();
         sorter.sort(arr);
@@ -136,8 +142,10 @@ public class standardSort {
         for (int i = 0; i < n; i++) {
             arra[i] = rand.nextInt(1000000000);
         }
-        /* sorterer via metode referanse (::), clone() for å lage kopi av array arra før
-           arra blir sortert slik at hver metode får samme usorterte array */
+/*
+sorterer via metode referanse (::), clone() for å lage kopi av array arra før
+arra blir sortert slik at hver metode får samme usorterte array.
+*/
         testSorting("standard", arra.clone(), standardSort::standardSort);
         testSorting("simple", arra.clone(), standardSort::sortSimple);
         testSorting("double", arra.clone(), standardSort::sortDouble);
