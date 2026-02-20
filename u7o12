@@ -17,10 +17,14 @@ public class standardSort {
     }
 /*
 a)
-array på size ~115000 tar meg ca 5 sek å gjennomføre med denne metoden.
-etter å ha sammenlignet denne sorteringen med b & c er det tydelig hvor
-ineffektiv denne er når man behandler større mengder data.
-ca. 1000 ganger lengre enn sistnevnte.
+Vi observerer at det er enorm forskjell mellom standardSort + sortSimple & sortDouble + sortCombo.
+Eksempel:
+125.000 elementer tar   7100 /  8500  /  7 /  5 ms
+250.000 elementer tar  66400 / 45136  / 15 / 16 ms
+500.001 elementer tar 131000 / 183000 / 13 / 14 ms
+standardSort er faktisk mer effektiv enn sortSimple siden sortSimple
+bruker tid på å først finne det minste elementet og settet det helt fremst,
+og deretter oppfører seg som standardSort.
 */
     public static void sortSimple(Integer[] a) {
         if (a.length <= 1) return;
@@ -128,28 +132,28 @@ ca. 1000 ganger lengre enn sistnevnte.
         }
     }
 //test
-    public static void testSorting(String navn, Integer[] arr, Sorter sorter) {
+    public static void testSorting(String navn, Integer[] li, Sorter sorter) {
         long start = System.nanoTime();
-        sorter.sort(arr);
+        sorter.sort(li);
         long slutt = (System.nanoTime() - start) / 1000000;
         System.out.println(navn + " tok " + slutt + " ms");
     }
     public static void main(String[] args) {
         int n = 114600;
-        Integer[] arra = new Integer[n];
+        Integer[] lis = new Integer[n];
         Random rand = new Random(42);
 
         for (int i = 0; i < n; i++) {
-            arra[i] = rand.nextInt(1000000000);
+            lis[i] = rand.nextInt(1000000000);
         }
 /*
-sorterer via metode referanse (::), clone() for å lage kopi av array arra før
-arra blir sortert slik at hver metode får samme usorterte array.
+sorterer via metode referanse (::), clone() for å lage kopi av liste "lis" før
+"lis" blir sortert slik at hver metode får samme usorterte liste.
 */
-        testSorting("standard", arra.clone(), standardSort::standardSort);
-        testSorting("simple", arra.clone(), standardSort::sortSimple);
-        testSorting("double", arra.clone(), standardSort::sortDouble);
-        testSorting("combo", arra.clone(), standardSort::sortCombo);
+        testSorting("standard", lis.clone(), standardSort::standardSort);
+        testSorting("simple", lis.clone(), standardSort::sortSimple);
+        testSorting("double", lis.clone(), standardSort::sortDouble);
+        testSorting("combo", lis.clone(), standardSort::sortCombo);
     }
     interface Sorter {
         void sort(Integer[] a);
